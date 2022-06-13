@@ -103,11 +103,13 @@ class find_duplicate_contacts:
         for key, value in card1['content'].items():
             print(f"  {key}: {value}")
         print("")
+        print("-" * cols)
         print("Card#2:")
         print(f"  filename: {card2['filename']}")
         for key, value in card2['content'].items():
             print(f"  {key}: {value}")
         print("")
+        print("-" * cols)
         print("Differences:")
         ddiff = deepdiff.DeepDiff(card1['content'], card2['content'], ignore_order=True)
         pprint(ddiff)
