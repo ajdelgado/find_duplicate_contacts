@@ -113,7 +113,6 @@ class find_duplicate_contacts:
         pprint(ddiff)
         advice1 = ""
         advice2 = ""
-        print(ddiff.keys())
         if len(ddiff.keys()) == 1:
             if 'dictionary_item_added' in ddiff.keys():
                 advice2 = "(Suggested)"
