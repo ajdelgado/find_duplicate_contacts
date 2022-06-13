@@ -14,6 +14,8 @@ from logging.handlers import SysLogHandler
 import vobject
 import deepdiff
 import shutil
+from pprint import pprint
+import json
 
 class find_duplicate_contacts:
 
@@ -76,18 +78,75 @@ class find_duplicate_contacts:
         count = 0
         for card in self.cards:
             count +=1
+            print(f"Contact {count} of {len(self.cards)}:")
             duplicated = False
             for checked_card in checked_cards:
                 if self.are_same_dict(card['content'], checked_card['content']):
                     duplicated = True
-                    self._log.info(f"Duplicates:\n  '{card['filename']}'\n  '{checked_card['filename']}")
+                    self._log.info(f"Totally duplicates:\n  '{card['filename']}'\n  '{checked_card['filename']}")
                     shutil.move(
                         card['filename'],
                         os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
                     )
+                if self.are_partially_same_dict(card['content'], checked_card['content'], key='fn'):
+                    if self.merge_cards(card, checked_card):
+                        duplicated = True
             if not duplicated:
                 checked_cards.append(card)
         self._log.info(f"Found {len(checked_cards)} unique cards")
+
+    def merge_cards(self, card1, card2):
+        cols, rows = os.get_terminal_size()
+        print("#" * cols)
+        print("Card#1:")
+        print(f"  filename: {card1['filename']}")
+        for key, value in card1['content'].items():
+            print(f"  {key}: {value}")
+        print("")
+        print("Card#2:")
+        print(f"  filename: {card2['filename']}")
+        for key, value in card2['content'].items():
+            print(f"  {key}: {value}")
+        print("")
+        print("Differences:")
+        ddiff = deepdiff.DeepDiff(card1['content'], card2['content'], ignore_order=True)
+        pprint(ddiff)
+        advice1 = ""
+        advice2 = ""
+        print(ddiff.keys())
+        if len(ddiff.keys()) == 1:
+            if 'dictionary_item_added' in ddiff.keys():
+                advice2 = "(Suggested)"
+            if 'dictionary_item_removed' in ddiff.keys():
+                advice1 = "(Suggested)"
+        print("-" * cols)
+        print(f"1 - Keep card#1 and move card#2 {advice1}")
+        print(f"2 - Keep card#2 and move card#1 {advice2}")
+        print('Anything else and we keep both')
+        option = input('What to do?')
+        if option == "1":
+            shutil.move(
+                card2['filename'],
+                os.path.join(self.duplicates_folder, os.path.basename(card2['filename']))
+            )
+            return True
+        elif option == "2":
+            shutil.move(
+                card1['filename'],
+                os.path.join(self.duplicates_folder, os.path.basename(card1['filename']))
+            )
+            return True
+        else:
+            print('Doing nothing.')
+            return False
+        
+
+    def are_partially_same_dict(self, d1, d2, key='id'):
+        if not isinstance(d1[key], list):
+            d1[key] = [ d1[key] ]
+            d2[key] = [ d2[key] ]
+        if d1[key][0] == d2[key][0] or d1[key][0].lower() == d2[key][0].lower():
+            return True
 
     def are_same_dict(self, d1, d2):
         ddiff = deepdiff.DeepDiff(d1, d2, ignore_order=True)
