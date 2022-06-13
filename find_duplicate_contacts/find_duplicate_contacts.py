@@ -207,7 +207,7 @@ class find_duplicate_contacts:
         case_sensitive=False,
     ), help='Set the debug level for the standard output.')
 @click.option('--log-file', '-l', help="File to store all debug messages.")
-@click.option("--directory", "-d", help="Directory containing vCard files to check.")
+@click.option("--directory", "-f", required=True, help="Directory containing vCard files to check.")
 @click.option('--duplicates-destination', '-D', default='duplicates', help='Directory to move duplicates files, relative to the directory containing the vCards.')
 @click_config_file.configuration_option()
 def __main__(debug_level, log_file, directory, duplicates_destination):
