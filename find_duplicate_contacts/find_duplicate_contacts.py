@@ -89,13 +89,13 @@ class find_duplicate_contacts:
                         os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
                     )
                 if self.are_partially_same_dict(card['content'], checked_card['content'], key='fn'):
-                    if self.merge_cards(card, checked_card):
+                    if self.manual_check_cards(card, checked_card):
                         duplicated = True
             if not duplicated:
                 checked_cards.append(card)
         self._log.info(f"Found {len(checked_cards)} unique cards")
 
-    def merge_cards(self, card1, card2):
+    def manual_check_cards(self, card1, card2):
         cols, rows = os.get_terminal_size()
         print("#" * cols)
         print("Card#1:")
