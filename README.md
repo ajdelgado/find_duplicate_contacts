@@ -20,8 +20,7 @@ Save the contacts as individual (one contact per file) vCard files in an isolate
 - Those completely equal, except for some list of keys (see the *ignore_fileds* variable), will be directly moved to the *--duplicates-destination* folder inside the *--directory*.
 - Those with equal full name, will be show and a prompt will ask you to keep one of the contact cards or just do nothing with them.
 
-```
-find_duplicate_contacts.py [OPTIONS]
+```find_duplicate_contacts.py [OPTIONS]```
 
 Options:
   -d, --debug-level [CRITICAL|ERROR|WARNING|INFO|DEBUG|NOTSET]
@@ -34,3 +33,7 @@ Options:
                                   to the directory containing the vCards. Default: duplicates
   --config FILE                   Read configuration from FILE.
   --help                          Show this message and exit.```
+
+## License
+
+[GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)
