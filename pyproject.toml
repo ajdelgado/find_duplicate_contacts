@@ -1,3 +1,27 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/ajdelgado/find_duplicate_contacts"
+
+[project]
+name = "find_duplicate_contacts"
+version = "0.0.3"
+description = "Find duplicate contacts in vCard files"
+readme = "README.md"
+authors = [{ name = "Antonio J. Delgado", email = "TXj6QGdwejbTD1iWAj2ws9pnV@susurrando.com" }]
+license = { file = "LICENSE" }
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+keywords = ["vCard", "contacts", "duplicates"]
+dependencies = [
+    "vobject",
+    "click",
+    "click_config_file",
+    'deepdiff',
+]
+requires-python = ">=3"
