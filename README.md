@@ -17,7 +17,7 @@ Save the contacts as individual (one contact per file) vCard files in an isolate
 
 ## Usage
 - Save the contacts as individual (one contact per file) vCard files in an isolated directory, pass this directory with the *--directory* option.
-- Those completely equal, except for some list of keys (see the *ignore_fileds* variable), will be directly moved to the *--duplicates-destination* folder inside the *--directory*.
+- Those completely equal, except for some list of keys (see the *ignore_fields* variable), will be directly moved to the *--duplicates-destination* folder inside the *--directory*.
 - Those with equal full name, will be show and a prompt will ask you to keep one of the contact cards or just do nothing with them.
 
 ```find_duplicate_contacts.py [OPTIONS]```
