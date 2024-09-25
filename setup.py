@@ -11,7 +11,7 @@ config.read('setup.cfg')
 setuptools.setup(
     scripts=['find_duplicate_contacts/find_duplicate_contacts.py'],
     author="Antonio J. Delgado",
-    version='0.0.3',
+    version='1.0.0',
     name='find_duplicate_contacts',
     author_email="TXj6QGdwejbTD1iWAj2ws9pnV@susurrando.com",
     url="https://susurrando.com",

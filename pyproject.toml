@@ -7,7 +7,7 @@ Homepage = "https://repos.susurrando.com/adelgado/find_duplicate_contacts"
 
 [project]
 name = "find_duplicate_contacts"
-version = "0.0.3"
+version = "1.0.0"
 description = "Find duplicate contacts in vCard files"
 readme = "README.md"
 authors = [{ name = "Antonio J. Delgado", email = "TXj6QGdwejbTD1iWAj2ws9pnV@susurrando.com" }]
