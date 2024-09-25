@@ -31,6 +31,10 @@ Options:
   -D, --duplicates-destination TEXT
                                   Directory to move duplicates files, relative
                                   to the directory containing the vCards. Default: duplicates
+  -i, --ignore-field TEXT         Fields to ignore when considering duplicate
+                                  contacts. Default: ["prodid", "uid", "version",
+                                  "rev", "x-thunderbird-etag", "x-mozilla-html", "photo",
+                                  "categories"]
   --config FILE                   Read configuration from FILE.
   --help                          Show this message and exit.```
 

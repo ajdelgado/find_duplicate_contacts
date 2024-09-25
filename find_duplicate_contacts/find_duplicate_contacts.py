@@ -37,16 +37,6 @@ class FindDuplicateContacts:
             )
         self._init_log()
 
-        self.ignore_fields = [
-            "prodid",
-            "uid",
-            "version",
-            "rev",
-            "x-thunderbird-etag",
-            "x-mozilla-html",
-            "photo"
-        ]
-
         self.duplicates_folder = os.path.join(
             self.config['directory'],
             self.config['duplicates_destination']
@@ -80,7 +70,7 @@ class FindDuplicateContacts:
                     vcard = vobject.readOne(content)
 
                 for key in vcard.contents.keys():
-                    if key not in self.ignore_fields:
+                    if key not in self.config['ignore_field']:
                         card['content'][key] = list()
                         for item in vcard.contents[key]:
                             card['content'][key].append(item.value)
@@ -241,6 +231,22 @@ class FindDuplicateContacts:
     '-D',
     default='duplicates',
     help='Directory to move duplicates files, relative to the directory containing the vCards.'
+)
+@click.option(
+    '--ignore-field',
+    '-i',
+    multiple=True,
+    default = [
+        "prodid",
+        "uid",
+        "version",
+        "rev",
+        "x-thunderbird-etag",
+        "x-mozilla-html",
+        "photo",
+        "categories"
+    ],
+    help='Fields to ignore when considering duplicate contacts.',
 )
 @click_config_file.configuration_option()
 def __main__(**kwargs):
