@@ -22,7 +22,8 @@ Save the contacts as individual (one contact per file) vCard files in an isolate
 
 ```find_duplicate_contacts.py [OPTIONS]```
 
-Options:
+### Options
+```
   -d, --debug-level [CRITICAL|ERROR|WARNING|INFO|DEBUG|NOTSET]
                                   Set the debug level for the standard output.
   -l, --log-file TEXT             File to store all debug messages.
@@ -37,7 +38,7 @@ Options:
                                   "categories"]
   --config FILE                   Read configuration from FILE.
   --help                          Show this message and exit.```
-
+```
 ## License
 
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)
