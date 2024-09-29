@@ -87,17 +87,18 @@ class FindDuplicateContacts:
                 print(f"Contact {count} of {len(self.cards)}:\b")
                 duplicated = False
                 for checked_card in checked_cards:
-                    if self.are_same_dict(card['content'], checked_card['content']):
-                        duplicated = True
-                        self._log.info(
-                            "Totally duplicates:\n  '%s'\n  '%s",
-                            card['filename'],
-                            checked_card['filename']
-                        )
-                        shutil.move(
-                            card['filename'],
-                            os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
-                        )
+                    if checked_card['filename'] not in self.removed_cards:
+                        if self.are_same_dict(card['content'], checked_card['content']):
+                            duplicated = True
+                            self._log.info(
+                                "Totally duplicates:\n  '%s'\n  '%s",
+                                card['filename'],
+                                checked_card['filename']
+                            )
+                            shutil.move(
+                                card['filename'],
+                                os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
+                            )
                     if self.are_partially_same_dict(card['content'], checked_card['content'], key='fn'):
                         if self.manual_check_cards(card, checked_card):
                             duplicated = True
