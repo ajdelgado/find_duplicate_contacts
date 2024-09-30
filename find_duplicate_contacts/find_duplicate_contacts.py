@@ -11,6 +11,7 @@ import logging
 from logging.handlers import SysLogHandler
 import shutil
 from pprint import pprint
+import json
 import click
 import click_config_file
 import vobject
@@ -91,17 +92,21 @@ class FindDuplicateContacts:
                         if self.are_same_dict(card['content'], checked_card['content']):
                             duplicated = True
                             self._log.info(
-                                "Totally duplicates:\n  '%s'\n  '%s",
+                                "Exact duplicates:\n  '%s'\n  '%s",
                                 card['filename'],
                                 checked_card['filename']
                             )
-                            shutil.move(
-                                card['filename'],
-                                os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
-                            )
-                    if self.are_partially_same_dict(card['content'], checked_card['content'], key='fn'):
-                        if self.manual_check_cards(card, checked_card):
-                            duplicated = True
+                            if not self.config['dummy']:
+                                shutil.move(
+                                    card['filename'],
+                                    os.path.join(self.duplicates_folder, os.path.basename(card['filename']))
+                                )
+                            else:
+                                print(f"{card['content']}\n{checked_card['content']}.\nI would move '{card['filename']}'")
+                        else:
+                            if self.are_partially_same_dict(card['content'], checked_card['content'], key='fn'):
+                                if self.manual_check_cards(card, checked_card):
+                                    duplicated = True
                 if not duplicated:
                     checked_cards.append(card)
         self._log.info(
@@ -128,6 +133,8 @@ class FindDuplicateContacts:
         print("Differences:")
         ddiff = deepdiff.DeepDiff(card1['content'], card2['content'], ignore_order=True)
         pprint(ddiff)
+        if len(ddiff.keys()) == 0:
+            print('Exact matches')
         advice1 = ""
         advice2 = ""
         if len(ddiff.keys()) == 1:
@@ -141,17 +148,19 @@ class FindDuplicateContacts:
         print('Anything else and we keep both')
         option = input('What to do?')
         if option == "1":
-            shutil.move(
-                card2['filename'],
-                os.path.join(self.duplicates_folder, os.path.basename(card2['filename']))
-            )
+            if not self.config['dummy']:
+                shutil.move(
+                    card2['filename'],
+                    os.path.join(self.duplicates_folder, os.path.basename(card2['filename']))
+                )
             self.removed_cards.append(card2['filename'])
             return True
         elif option == "2":
-            shutil.move(
-                card1['filename'],
-                os.path.join(self.duplicates_folder, os.path.basename(card1['filename']))
-            )
+            if not self.config['dummy']:
+                shutil.move(
+                    card1['filename'],
+                    os.path.join(self.duplicates_folder, os.path.basename(card1['filename']))
+                )
             self.removed_cards.append(card1['filename'])
             return True
         else:
@@ -169,28 +178,12 @@ class FindDuplicateContacts:
     def are_same_dict(self, d1, d2):
         '''Test if two dictionaries are equal'''
         ddiff = deepdiff.DeepDiff(d1, d2, ignore_order=True)
-        if ddiff == dict():
-            return True
-        else:
-            if 'dictionary_item_added' in ddiff or 'dictionary_item_removed' in ddiff:
+        if len(ddiff.keys()) != 0:
+            if ('dictionary_item_added' in ddiff or
+            'dictionary_item_removed' in ddiff or
+            'values_changed' in ddiff):
                 return False
-            else:
-                if 'values_changed' in ddiff:
-                    real_change = False
-                    for key in ddiff['values_changed'].keys():
-                        if isinstance(
-                            ddiff['values_changed'][key]['new_value'],
-                            str
-                        ):
-                            if (ddiff['values_changed'][key]['new_value'].lower()
-                            !=
-                            ddiff['values_changed'][key]['old_value'].lower()):
-                                real_change = True
-                    if real_change:
-                        return False
-                    else:
-                        # print(ddiff)
-                        return False
+        return True
 
     def _init_log(self):
         ''' Initialize log object '''
@@ -252,6 +245,13 @@ class FindDuplicateContacts:
         "categories"
     ],
     help='Fields to ignore when considering duplicate contacts.',
+)
+@click.option(
+    '--dummy',
+    '-n',
+    is_flag=True,
+    default=False,
+    help='Run without moving duplicate files.'
 )
 @click_config_file.configuration_option()
 def __main__(**kwargs):
