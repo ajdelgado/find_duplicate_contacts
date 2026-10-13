@@ -42,3 +42,4 @@ Save the contacts as individual (one contact per file) vCard files in an isolate
 ## License
 
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)
+Main (latest) code in https://repos.susurrando.com/adelgado/find_duplicate_contacts
